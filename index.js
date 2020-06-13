@@ -1,63 +1,94 @@
 const offerOptions = {
-  offerToReceiveAudio: 1,
-  offerToReceiveVideo: 1
+    offerToReceiveAudio: 1,
+    offerToReceiveVideo: 1
 };
 const video_form = document.getElementById("videos");
 const video_source = document.getElementById("src");
 const player = document.getElementById("player");
-const watcher = document.getElementById("watcher");
 const loaded = new Promise((resolve, reject) => {
-	video_form.addEventListener("submit", function(ev) {
-		ev.preventDefault();
-		const video_source_url = window.URL.createObjectURL(video_source.files[0]);
-		resolve(video_source_url);
-	});
+    video_form.addEventListener("submit", function(ev) {
+        ev.preventDefault();
+        const video_source_url = window.URL.createObjectURL(video_source.files[0]);
+        resolve(video_source_url);
+    });
 });
+
+async function captureStream() {
+    player.src = await loaded;
+    player.play();
+    return player.captureStream();
+}
+
+
+
+function configure(host, signaler, peer) {
+    host.onconnectionstatechange = e => console.debug(host.connectionState);
+    host.onicecandidate = ({candidate}) => signaler.send({candidate, from: "host", to: peer});
+
+    host.onnegotiationneeded = async () => {
+        try {
+            await host.setLocalDescription();
+            signaler.send({ description: host.localDescription, from: "host", to: peer });
+        } catch(err) {
+            console.error(err);
+        } 
+    };
+
+    host.onmessage = async ({ description, candidate, from, to }) => {
+        let pc = host;
+
+        try {
+            if (description) {
+
+                try {
+                    await pc.setRemoteDescription(description);
+                } catch(err) {
+                    console.error(to, err);
+                    return;
+                } finally {
+                    if (description.type =="offer") {
+                        await pc.setLocalDescription();
+                        signaler.send({description: pc.localDescription, from: to , to: from});
+                    }
+                }
+            } else if (candidate) {
+                await pc.addIceCandidate(candidate);
+            }
+        } catch(err) {
+            console.error(err);
+        }
+    }
+
+    return host;
+}
+
+let connections = {};
+
 async function main() {
-	player.src = await loaded;
-	console.debug(player);
+    player.captureStream = player.captureStream || player.mozCaptureStream;
+    const stream = player.captureStream()
+    console.debug("got stream", stream);
+    captureStream();
 
-	player.captureStream = player.captureStream || player.mozCaptureStream;
-	const stream = player.captureStream();
-	console.debug("capture stream", stream);
-	const host = new RTCPeerConnection(null);
-	console.debug("created host");
-	host.onconnectionstatechange = e => console.debug(e);
+    const signaler = new Signal("host");
 
-	const viewer = new RTCPeerConnection(null);
-	function gotRemoteStream(event) {
-  		if (watcher.srcObject !== event.streams[0]) {
-			console.debug("got remote stream", event.streams);
-			watcher.srcObject = event.streams[0];
-  		}
-	}
-	viewer.ontrack = gotRemoteStream;
+    signaler.onmessage = async (msg) => {
+        if (!(msg.from in connections)) {
+            const host = new RTCPeerConnection(null);
+            console.debug("created host");
 
-	viewer.onicecandidate = ({candidate}) => host.addIceCandidate(candidate);
-	host.onicecandidate = ({candidate}) => viewer.addIceCandidate(candidate);
+            stream.getTracks().forEach(track => host.addTrack(track, stream));
+            stream.addEventListener("addtrack", async (e) => {
+                console.debug("track added");
+                host.addTrack(e.track, stream);
+            });
 
-	host.onnegotiationneeded = async () => {
-		console.debug("test");
-	};
-	stream.getTracks().forEach(track => console.debug(track));
-	console.debug("loaded hosts movie");
+            configure(host, signaler, msg.from);
 
-	let not_connected = true;
-	stream.onaddtrack = async (e) => {
-		console.debug("track added");
-		host.addTrack(e.track, stream);
-		if (not_connected) {
-			not_connected = false;
-			console.debug("negotiation needed start");
-			await host.setLocalDescription();
-			console.debug("host formulates an answer to viewers call");
-			await viewer.setRemoteDescription(host.localDescription);
-			console.debug("viewer sees that host has picked up, sets remote description");
-			await viewer.setLocalDescription();
-			console.debug("viewer starting to call into host");
-			await host.setRemoteDescription(viewer.localDescription)
-			console.debug("host gets viewers call, sets remote description");
-		}
-	};
+            connections[msg.from] = host;
+            return;
+        }
+        await connections[msg.from].onmessage(msg);
+    };
 }
 main();
