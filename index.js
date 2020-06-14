@@ -2,11 +2,11 @@ const offerOptions = {
     offerToReceiveAudio: 1,
     offerToReceiveVideo: 1
 };
-const video_form = document.getElementById("videos");
 const video_source = document.getElementById("src");
+const play_button = document.getElementById("play");
 const player = document.getElementById("player");
 const loaded = new Promise((resolve, reject) => {
-    video_form.addEventListener("submit", function(ev) {
+    play_button.addEventListener("click", function(ev) {
         ev.preventDefault();
         const video_source_url = window.URL.createObjectURL(video_source.files[0]);
         resolve(video_source_url);
@@ -51,7 +51,7 @@ function configure(host, signaler, peer) {
                         signaler.send({description: pc.localDescription, from: to , to: from});
                     }
                 }
-            } else if (candidate) {
+            } else if (candidate != null) {
                 await pc.addIceCandidate(candidate);
             }
         } catch(err) {
@@ -65,14 +65,18 @@ function configure(host, signaler, peer) {
 let connections = {};
 
 async function main() {
+	console.debug("loading application");
     player.captureStream = player.captureStream || player.mozCaptureStream;
     const stream = player.captureStream()
     console.debug("got stream", stream);
     captureStream();
 
     const signaler = new Signal("host");
+	await signaler.configure();
+	signaler.send({msg: "hello world"});
 
     signaler.onmessage = async (msg) => {
+		console.debug("host got", msg);
         if (!(msg.from in connections)) {
             const host = new RTCPeerConnection(null);
             console.debug("created host");
@@ -86,9 +90,9 @@ async function main() {
             configure(host, signaler, msg.from);
 
             connections[msg.from] = host;
-            return;
+			return;
         }
         await connections[msg.from].onmessage(msg);
     };
 }
-main();
+window.onload = main;
