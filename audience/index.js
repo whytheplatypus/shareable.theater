@@ -1,4 +1,5 @@
 const main_element = document.getElementsByTagName("main")[0];
+const name = uuidv4();
 const watchButton = document.getElementById("watch");
 const watcher = document.getElementById("screen");
 watchButton.onclick = () => {
@@ -21,7 +22,6 @@ function uuidv4() {
 }
 
 async function addWatcher(watcher) {
-    const name = uuidv4();
     const signaler = new Signal("viewer");
 	await signaler.configure();
     const viewer = configureViewer(signaler, name);
@@ -34,6 +34,9 @@ async function addWatcher(watcher) {
     }
     viewer.ontrack = gotRemoteStream;
     signaler.onmessage = async ({ description, candidate, from, to }) => {
+		if (to != name) {
+			return;
+		}
         let pc = viewer;
         try {
             if (description) {

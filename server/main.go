@@ -67,10 +67,8 @@ func serveViewer(w http.ResponseWriter, r *http.Request) {
 			}
 			message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 			log.Println("clients got message", string(message))
-			go func(client chan []byte, message []byte) {
-				log.Println("clients sent message to host", string(message))
-				client <- message
-			}(room.Host, message)
+			log.Println("clients sent message to host", string(message))
+			room.Host <- message
 		}
 	}(room, conn)
 
@@ -79,6 +77,7 @@ func serveViewer(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			ticker.Stop()
 			conn.Close()
+			delete(room.Clients, client)
 			close(client)
 		}()
 		for {
