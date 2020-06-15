@@ -2,12 +2,18 @@ const offerOptions = {
     offerToReceiveAudio: 1,
     offerToReceiveVideo: 1
 };
+const main_element = document.getElementsByTagName("main")[0];
 const video_source = document.getElementById("src");
 const play_button = document.getElementById("play");
 const player = document.getElementById("player");
+video_source.addEventListener("input", function(ev) {
+    main_element.setAttribute("data-state", "ready");
+    document.getElementById("movie-name").innerHTML = ` ${video_source.files[0].name}`;
+});
 const loaded = new Promise((resolve, reject) => {
     play_button.addEventListener("click", function(ev) {
         ev.preventDefault();
+        main_element.setAttribute("data-state", "playing");
         const video_source_url = window.URL.createObjectURL(video_source.files[0]);
         resolve(video_source_url);
     });

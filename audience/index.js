@@ -1,16 +1,10 @@
-const addWatcherButton = document.getElementById("add-watcher");
-addWatcherButton.addEventListener("click", function(e) {
-	e.preventDefault();
-    let watcher = document.createElement("video"); 
-    document.body.appendChild(watcher);
-    addWatcher(watcher)
-});
-
-/*setTimeout(function() {
-    let watcher = document.createElement("video"); 
-    document.body.appendChild(watcher);
-    addWatcher(watcher)
-}, 5000);*/
+const main_element = document.getElementsByTagName("main")[0];
+const watchButton = document.getElementById("watch");
+const watcher = document.getElementById("screen");
+watchButton.onclick = () => {
+    watcher.play();
+    main_element.setAttribute("data-state", "playing");
+}
 
 function configureViewer(signaler, name) {
     const viewer = new RTCPeerConnection(null);
@@ -33,9 +27,9 @@ async function addWatcher(watcher) {
     const viewer = configureViewer(signaler, name);
     function gotRemoteStream(event) {
         if (watcher.srcObject !== event.streams[0]) {
+            main_element.setAttribute("data-state", "ready");
             console.debug("got remote stream", event.streams[0].getTracks());
             watcher.srcObject = event.streams[0];
-            watcher.play();
         }
     }
     viewer.ontrack = gotRemoteStream;
@@ -69,3 +63,5 @@ async function addWatcher(watcher) {
 	await viewer.setLocalDescription();
 	signaler.send({description: viewer.localDescription, from: name, to: "host"});
 }
+
+addWatcher(watcher)

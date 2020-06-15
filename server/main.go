@@ -214,8 +214,9 @@ var addr = flag.String("addr", ":8080", "http service address")
 
 func main() {
 	flag.Parse()
-	fs := http.FileServer(http.Dir(".."))
-	http.Handle("/", fs)
+	http.Handle("/booth/", http.StripPrefix("/booth/", http.FileServer(http.Dir("../booth"))))
+	http.Handle("/audience/", http.StripPrefix("/audience/", http.FileServer(http.Dir("../audience"))))
+	http.Handle("/shared/", http.StripPrefix("/shared/", http.FileServer(http.Dir("../shared"))))
 	http.HandleFunc("/host", func(w http.ResponseWriter, r *http.Request) {
 		serveHost(w, r)
 	})

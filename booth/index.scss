@@ -1,0 +1,71 @@
+main {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	section#setup {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		label {
+			margin: auto;
+			width: 40%;
+			min-width: 10rem;
+			max-width: 30rem;
+			text-align: center;
+			display: block;
+			cursor: pointer;
+			border: 1px solid #ccc;
+			border-radius: 40px;
+
+			svg {
+				vertical-align: middle;
+				width: 2rem;
+				height: 2rem;
+			}
+			input {
+				display: none;
+			}
+		}
+		button {
+			width: 40%;
+			margin: auto;
+			border-radius: 40px;
+			background: white;
+			cursor: pointer;
+			svg {
+				vertical-align: middle;
+				width: 2rem;
+				height: 2rem;
+			}
+			display: none;
+		}
+	}
+	video {
+		width: 100%;
+		display: none;
+	}
+}
+
+main[data-state=ready] {
+	section#setup {
+		button {
+			display: block;
+		}
+		label {
+			border: none;
+			span#load {
+				display: none;
+			}
+		}
+	}
+}
+
+main[data-state=playing] {
+	section#setup {
+		display: none;
+	}
+	video {
+		display: block;
+	}
+}

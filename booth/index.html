@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <script src="https://unpkg.com/feather-icons"></script>
+        <link href="/booth/index.css" rel="stylesheet">
+    </head>
+    <body>
+        <main>
+            <section id="setup">
+                <label>
+                    <input type="file" id="src"></input>
+                    <h1>
+                        <span id="load">Load </span><i data-feather="film"></i><span id="movie-name"></span>
+                    </h1>
+                </label>
+                <button id="play"><h1>Start the movie <i data-feather="video"></i></h1></button>
+            </section>
+            <video id="player" controls></video>
+        </main>
+    <script src="/shared/signal.js"></script>
+    <script src="/shared/websocket.js"></script>
+    <script src="/booth/index.js"></script>
+    <script>
+        feather.replace();
+    </script>
+    </body>
+</html>
