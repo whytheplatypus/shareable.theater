@@ -63,9 +63,17 @@ main[data-state=ready] {
 
 main[data-state=playing] {
 	section#setup {
-		display: none;
-	}
-	video {
-		display: block;
+		button {
+			display: none;
+		}
+		label {
+			border: none;
+			span#load {
+				display: none;
+			}
+		}
+		video {
+			display: block;
+		}
 	}
 }

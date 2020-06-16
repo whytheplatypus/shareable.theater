@@ -30,13 +30,19 @@ async function addWatcher(watcher) {
 	await signaler.configure();
     const viewer = configureViewer(signaler, name);
     function gotRemoteStream(event) {
+        main_element.setAttribute("data-state", "ready");
 		console.debug(event.track);
-    	main_element.setAttribute("data-state", "ready");
 		if (!inboundStream) {
-      		inboundStream = new MediaStream();
-    		watcher.srcObject = inboundStream;
-    	}
-    	inboundStream.addTrack(event.track);
+			inboundStream = new MediaStream();
+			watcher.srcObject = inboundStream;
+		}
+		// hack: assumes 1 movie = 2 tracks
+		if (inboundStream.getTracks().length > 1) {
+			inboundStream.getTracks().forEach(track => inboundStream.removeTrack(track));
+		}
+		inboundStream.addTrack(event.track);
+
+		console.debug(inboundStream.getTracks());
     }
     viewer.ontrack = gotRemoteStream;
     signaler.onmessage = async ({ description, candidate, from, to }) => {

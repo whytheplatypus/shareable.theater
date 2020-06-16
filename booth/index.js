@@ -1,31 +1,31 @@
-const main_element = document.getElementsByTagName("main")[0];
 const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
+
+const main_element = document.getElementsByTagName("main")[0];
 const video_source = document.getElementById("src");
 const play_button = document.getElementById("play");
 const player = document.getElementById("player");
+player.captureStream = player.captureStream || player.mozCaptureStream;
+var stream = player.captureStream()
+stream.onaddtrack = updateTracks;
+
 video_source.addEventListener("input", function(ev) {
     main_element.setAttribute("data-state", "ready");
     document.getElementById("movie-name").innerHTML = ` ${video_source.files[0].name}`;
 });
-const loaded = new Promise((resolve, reject) => {
-    play_button.addEventListener("click", function(ev) {
-        ev.preventDefault();
-        main_element.setAttribute("data-state", "playing");
-        const video_source_url = window.URL.createObjectURL(video_source.files[0]);
-    	player.src = video_source_url;
-		player.addEventListener("loadeddata", function(){
-        	resolve();
-		});
-    });
-});
 
-async function captureStream() {
-	await loaded;
+play_button.addEventListener("click", function(ev) {
+	ev.preventDefault();
+	
+	main_element.setAttribute("data-state", "playing");
+
+	const video_source_url = window.URL.createObjectURL(video_source.files[0]);
+	player.src = video_source_url;
+
+	stream = player.captureStream()
+	stream.onaddtrack = updateTracks;
+
   	player.play();
-    return player.captureStream();
-}
-
-
+});
 
 function configure(host, signaler, peer) {
     host.onconnectionstatechange = e => console.debug(host.connectionState);
@@ -70,12 +70,14 @@ function configure(host, signaler, peer) {
 
 let connections = {};
 
+function updateTracks(e) {
+	for (conn in connections) {
+    	connections[conn].addTrack(e.track);
+	}
+}
+
 async function main() {
 	console.debug("loading application");
-    /*player.captureStream = player.captureStream || player.mozCaptureStream;*/
-    /*const stream = player.captureStream()*/
-    const stream = await captureStream();
-    console.debug("got stream", stream);
 
     const signaler = new Signal("host");
 	await signaler.configure();
@@ -87,11 +89,7 @@ async function main() {
             const host = new RTCPeerConnection(configuration);
             console.debug("created host");
 
-            stream.getTracks().forEach(track => host.addTrack(track, stream));
-            stream.addEventListener("addtrack", async (e) => {
-                console.debug("track added");
-                host.addTrack(e.track);
-            });
+            stream.getTracks().forEach(track => host.addTrack(track));
 
             configure(host, signaler, msg.from);
 
@@ -101,4 +99,4 @@ async function main() {
         await connections[msg.from].onmessage(msg);
     };
 }
-window.onload = main;
+main();
