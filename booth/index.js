@@ -33,7 +33,7 @@ function configure(host, signaler, peer) {
 
     host.onnegotiationneeded = async () => {
         try {
-            await host.setLocalDescription();
+            await host.setLocalDescription(await host.createOffer());
             signaler.send({ description: host.localDescription, from: "host", to: peer });
         } catch(err) {
             console.error(err);
@@ -53,11 +53,11 @@ function configure(host, signaler, peer) {
                     return;
                 } finally {
                     if (description.type =="offer") {
-                        await pc.setLocalDescription();
+                        await pc.setLocalDescription(await pc.createAnswer());
                         signaler.send({description: pc.localDescription, from: to , to: from});
                     }
                 }
-            } else if (candidate != null) {
+            } else if (candidate) {
                 await pc.addIceCandidate(candidate);
             }
         } catch(err) {

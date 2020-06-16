@@ -37,9 +37,9 @@ async function addWatcher(watcher) {
 			watcher.srcObject = inboundStream;
 		}
 		// hack: assumes 1 movie = 2 tracks
-		if (inboundStream.getTracks().length > 1) {
-			inboundStream.getTracks().forEach(track => inboundStream.removeTrack(track));
-		}
+        if (inboundStream.getTracks().length > 1) {
+            inboundStream.getTracks().forEach(track => inboundStream.removeTrack(track));
+        }
 		inboundStream.addTrack(event.track);
 
 		console.debug(inboundStream.getTracks());
@@ -64,7 +64,7 @@ async function addWatcher(watcher) {
                     if (description.type == "offer") {
                         console.debug(description);
                         console.debug(to, "accepting offer");
-                        await pc.setLocalDescription();
+                        await pc.setLocalDescription(await pc.createAnswer());
                         signaler.send({description: pc.localDescription, from: to , to: from});
                     }
                 }
@@ -75,7 +75,7 @@ async function addWatcher(watcher) {
             console.error(err);
         }
     }
-	await viewer.setLocalDescription();
+	await viewer.setLocalDescription(await viewer.createOffer());
 	signaler.send({description: viewer.localDescription, from: name, to: "host"});
 }
 
