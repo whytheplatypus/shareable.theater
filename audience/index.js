@@ -1,14 +1,16 @@
 const main_element = document.getElementsByTagName("main")[0];
+const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
+
 const name = uuidv4();
 const watchButton = document.getElementById("watch");
 const watcher = document.getElementById("screen");
 watchButton.onclick = () => {
-    watcher.play();
     main_element.setAttribute("data-state", "playing");
+    watcher.play();
 }
 
 function configureViewer(signaler, name) {
-    const viewer = new RTCPeerConnection(null);
+    const viewer = new RTCPeerConnection(configuration);
     viewer.onicecandidate = ({candidate}) => signaler.send({candidate, from: name, to: "host"});
     return viewer;
 }
@@ -21,16 +23,20 @@ function uuidv4() {
     });
 }
 
+let inboundStream;
+
 async function addWatcher(watcher) {
     const signaler = new Signal("viewer");
 	await signaler.configure();
     const viewer = configureViewer(signaler, name);
     function gotRemoteStream(event) {
-        if (watcher.srcObject !== event.streams[0]) {
-            main_element.setAttribute("data-state", "ready");
-            console.debug("got remote stream", event.streams[0].getTracks());
-            watcher.srcObject = event.streams[0];
-        }
+		console.debug(event.track);
+    	main_element.setAttribute("data-state", "ready");
+		if (!inboundStream) {
+      		inboundStream = new MediaStream();
+    		watcher.srcObject = inboundStream;
+    	}
+    	inboundStream.addTrack(event.track);
     }
     viewer.ontrack = gotRemoteStream;
     signaler.onmessage = async ({ description, candidate, from, to }) => {

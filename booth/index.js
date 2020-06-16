@@ -1,8 +1,5 @@
-const offerOptions = {
-    offerToReceiveAudio: 1,
-    offerToReceiveVideo: 1
-};
 const main_element = document.getElementsByTagName("main")[0];
+const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
 const video_source = document.getElementById("src");
 const play_button = document.getElementById("play");
 const player = document.getElementById("player");
@@ -15,13 +12,16 @@ const loaded = new Promise((resolve, reject) => {
         ev.preventDefault();
         main_element.setAttribute("data-state", "playing");
         const video_source_url = window.URL.createObjectURL(video_source.files[0]);
-        resolve(video_source_url);
+    	player.src = video_source_url;
+		player.addEventListener("loadeddata", function(){
+        	resolve();
+		});
     });
 });
 
 async function captureStream() {
-    player.src = await loaded;
-    player.play();
+	await loaded;
+  	player.play();
     return player.captureStream();
 }
 
@@ -72,10 +72,10 @@ let connections = {};
 
 async function main() {
 	console.debug("loading application");
-    player.captureStream = player.captureStream || player.mozCaptureStream;
-    const stream = player.captureStream()
+    /*player.captureStream = player.captureStream || player.mozCaptureStream;*/
+    /*const stream = player.captureStream()*/
+    const stream = await captureStream();
     console.debug("got stream", stream);
-    captureStream();
 
     const signaler = new Signal("host");
 	await signaler.configure();
@@ -84,13 +84,13 @@ async function main() {
     signaler.onmessage = async (msg) => {
 		console.debug("host got", msg);
         if (!(msg.from in connections)) {
-            const host = new RTCPeerConnection(null);
+            const host = new RTCPeerConnection(configuration);
             console.debug("created host");
 
             stream.getTracks().forEach(track => host.addTrack(track, stream));
             stream.addEventListener("addtrack", async (e) => {
                 console.debug("track added");
-                host.addTrack(e.track, stream);
+                host.addTrack(e.track);
             });
 
             configure(host, signaler, msg.from);
