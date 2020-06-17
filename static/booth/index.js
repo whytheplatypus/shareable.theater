@@ -87,13 +87,13 @@ async function main() {
 		console.debug("host got", msg);
         if (!(msg.from in connections)) {
             const host = new RTCPeerConnection(configuration);
+            connections[msg.from] = host;
             console.debug("created host");
 
             stream.getTracks().forEach(track => host.addTrack(track));
 
             configure(host, signaler, msg.from);
 
-            connections[msg.from] = host;
 			return;
         }
         await connections[msg.from].onmessage(msg);

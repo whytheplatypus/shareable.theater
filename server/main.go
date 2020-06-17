@@ -3,10 +3,12 @@ package main
 import (
 	"bytes"
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 )
 
@@ -19,6 +21,9 @@ const (
 
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
+
+	THEATER_CAPACITY = 50
+	THEATER_LIMIT    = 1000
 )
 
 var (
@@ -31,14 +36,12 @@ type Room struct {
 	Clients map[chan []byte]bool
 }
 
-const DEMO_ROOM = "Hello Room"
-
 var rooms = map[string]*Room{}
 
 var upgrader = websocket.Upgrader{}
 
-func serveViewer(w http.ResponseWriter, r *http.Request) {
-	room, ok := rooms[DEMO_ROOM]
+func serveViewer(w http.ResponseWriter, r *http.Request, theater string) {
+	room, ok := rooms[theater]
 	if !ok {
 		return
 	}
@@ -116,8 +119,8 @@ func serveViewer(w http.ResponseWriter, r *http.Request) {
 	}(client, conn)
 }
 
-func serveHost(w http.ResponseWriter, r *http.Request) {
-	_, ok := rooms[DEMO_ROOM]
+func serveHost(w http.ResponseWriter, r *http.Request, theater string) {
+	_, ok := rooms[theater]
 	if ok {
 		log.Println("room is taken")
 		return
@@ -127,7 +130,7 @@ func serveHost(w http.ResponseWriter, r *http.Request) {
 		Host:    make(chan []byte, 256),
 		Clients: map[chan []byte]bool{},
 	}
-	rooms[DEMO_ROOM] = room
+	rooms[theater] = room
 
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -165,7 +168,7 @@ func serveHost(w http.ResponseWriter, r *http.Request) {
 			conn.Close()
 			log.Println("closing host")
 			close(room.Host)
-			delete(rooms, DEMO_ROOM)
+			delete(rooms, theater)
 		}()
 		for {
 			select {
@@ -213,15 +216,68 @@ var addr = flag.String("addr", ":8080", "http service address")
 
 func main() {
 	flag.Parse()
-	http.Handle("/booth/", http.StripPrefix("/booth/", http.FileServer(http.Dir("../booth"))))
-	http.Handle("/audience/", http.StripPrefix("/audience/", http.FileServer(http.Dir("../audience"))))
-	http.Handle("/shared/", http.StripPrefix("/shared/", http.FileServer(http.Dir("../shared"))))
-	http.HandleFunc("/host", func(w http.ResponseWriter, r *http.Request) {
-		serveHost(w, r)
+
+	r := mux.NewRouter()
+	r.HandleFunc("/booth/", func(w http.ResponseWriter, r *http.Request) {
+		buf := &bytes.Buffer{}
+		tmpl.Execute(buf, "")
+		theater := fmt.Sprintf("/booth/%s", buf.String())
+		http.Redirect(w, r, theater, 302)
 	})
-	http.HandleFunc("/viewer", func(w http.ResponseWriter, r *http.Request) {
-		serveViewer(w, r)
+	r.HandleFunc("/booth/{theater}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		theater := vars["theater"]
+		_, ok := rooms[theater]
+		if ok {
+			log.Println("room is taken")
+			buf := &bytes.Buffer{}
+			tmpl.Execute(buf, "")
+			alternate_theater := fmt.Sprintf("This theater is currently in use. Try /booth/%s", buf.String())
+			w.Write([]byte(alternate_theater))
+			w.WriteHeader(http.StatusConflict)
+			return
+		}
+		if len(rooms) > THEATER_LIMIT {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		http.ServeFile(w, r, "../static/booth/index.html")
 	})
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("../static"))))
+
+	r.HandleFunc("/booth/{theater}/signal", func(w http.ResponseWriter, r *http.Request) {
+		if len(rooms) > THEATER_LIMIT {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		vars := mux.Vars(r)
+		theater := vars["theater"]
+		serveHost(w, r, theater)
+	})
+
+	r.HandleFunc("/audience/{theater}", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		theater := vars["theater"]
+		_, ok := rooms[theater]
+		if !ok {
+			w.Write([]byte("There are no movies playing in this theater at the moment."))
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		if len(rooms[theater].Clients) > THEATER_CAPACITY {
+			w.Write([]byte("That theater is full at the moment."))
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		http.ServeFile(w, r, "../static/audience/index.html")
+	})
+
+	r.HandleFunc("/audience/{theater}/signal", func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		theater := vars["theater"]
+		serveViewer(w, r, theater)
+	})
+	http.Handle("/", r)
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
