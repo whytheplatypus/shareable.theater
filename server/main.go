@@ -229,11 +229,10 @@ func main() {
 		theater := vars["theater"]
 		_, ok := rooms[theater]
 		if ok {
-			log.Println("room is taken")
+			log.Println("room is already taken")
 			buf := &bytes.Buffer{}
 			tmpl.Execute(buf, "")
-			alternate_theater := fmt.Sprintf("This theater is currently in use. Try /booth/%s", buf.String())
-			w.Write([]byte(alternate_theater))
+			inUsePage.Execute(w, buf.String())
 			w.WriteHeader(http.StatusConflict)
 			return
 		}
@@ -260,13 +259,12 @@ func main() {
 		theater := vars["theater"]
 		_, ok := rooms[theater]
 		if !ok {
-			w.Write([]byte("There are no movies playing in this theater at the moment."))
 			w.WriteHeader(http.StatusNotFound)
+			http.ServeFile(w, r, "../static/empty.html")
 			return
 		}
 		if len(rooms[theater].Clients) > THEATER_CAPACITY {
-			w.Write([]byte("That theater is full at the moment."))
-			w.WriteHeader(http.StatusOK)
+			http.ServeFile(w, r, "../static/full.html")
 			return
 		}
 		http.ServeFile(w, r, "../static/audience/index.html")
