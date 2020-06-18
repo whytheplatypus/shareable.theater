@@ -4,28 +4,33 @@ const main_element = document.getElementsByTagName("main")[0];
 const video_source = document.getElementById("src");
 const play_button = document.getElementById("play");
 const player = document.getElementById("player");
+const sharer = document.getElementById("sharer")
 player.captureStream = player.captureStream || player.mozCaptureStream;
-var stream = player.captureStream()
+function playVideo(file) {
+	main_element.setAttribute("data-state", "playing");
+
+	const video_source_url = URL.createObjectURL(file);
+    player.src = video_source_url;
+}
+play_button.addEventListener("click", function(ev) {
+	ev.preventDefault();
+    playVideo(video_source.files[0]);
+});
+
+// there is a bug in firefox
+// the mozCaptureStream() call removes the audio from the video element and stream.
+// Likely this will be fixed if and when mozCaptureStream stops being prefixed
+// For now using a proxi video element for local playback seems to solve this
+sharer.srcObject = player.captureStream()
+const stream = player.captureStream()
 stream.onaddtrack = updateTracks;
 
-video_source.addEventListener("input", function(ev) {
+
+video_source.addEventListener("change", function(ev) {
     main_element.setAttribute("data-state", "ready");
     document.getElementById("movie-name").innerHTML = ` ${video_source.files[0].name}`;
 });
 
-play_button.addEventListener("click", function(ev) {
-	ev.preventDefault();
-	
-	main_element.setAttribute("data-state", "playing");
-
-	const video_source_url = window.URL.createObjectURL(video_source.files[0]);
-	player.src = video_source_url;
-
-	stream = player.captureStream()
-	stream.onaddtrack = updateTracks;
-
-  	player.play();
-});
 
 function configure(host, signaler, peer) {
     host.onconnectionstatechange = e => console.debug(host.connectionState);
@@ -71,7 +76,7 @@ function configure(host, signaler, peer) {
 let connections = {};
 
 function updateTracks(e) {
-	for (conn in connections) {
+	for (let conn in connections) {
     	connections[conn].addTrack(e.track);
 	}
 }

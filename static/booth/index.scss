@@ -47,6 +47,9 @@ main {
 			}
 		}
 	}
+	video#player {
+		display: none;
+ 	}
 	a#copy {
 		vertical-align: middle;
 	}
