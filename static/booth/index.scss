@@ -1,3 +1,12 @@
+.center {
+	margin: auto;
+}
+.ready {
+	display: none;
+}
+.playing {
+	display: none;
+}
 main {
 	height: 100%;
 	display: flex;
@@ -8,7 +17,6 @@ main {
 		display: flex;
 		flex-direction: column;
 		label {
-			margin: auto;
 			width: 40%;
 			min-width: 10rem;
 			max-width: 30rem;
@@ -29,7 +37,6 @@ main {
 		}
 		button {
 			width: 40%;
-			margin: auto;
 			border-radius: 40px;
 			background: white;
 			cursor: pointer;
@@ -38,42 +45,21 @@ main {
 				width: 2rem;
 				height: 2rem;
 			}
-			display: none;
 		}
 	}
-	video {
-		width: 100%;
-		display: none;
+	a#copy {
+		vertical-align: middle;
 	}
 }
 
 main[data-state=ready] {
-	section#setup {
-		button {
-			display: block;
-		}
-		label {
-			border: none;
-			span#load {
-				display: none;
-			}
-		}
+	.ready {
+		display: initial;
 	}
 }
 
 main[data-state=playing] {
-	section#setup {
-		button {
-			display: none;
-		}
-		label {
-			border: none;
-			span#load {
-				display: none;
-			}
-		}
-		video {
-			display: block;
-		}
+	.playing {
+		display: initial;
 	}
 }

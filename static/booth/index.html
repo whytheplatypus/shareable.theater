@@ -6,14 +6,15 @@
     <body>
         <main>
             <section id="setup">
-                <label>
+                <h3 class="center">Invite your audience to <input type="text" id="audience-link" readonly></input><a id="copy"><i data-feather="copy"></i></a></h3>
+                <label class="center">
                     <input type="file" id="src"></input>
                     <h1>
                         <span id="load">Load </span><i data-feather="film"></i><span id="movie-name"></span>
                     </h1>
                 </label>
-                <button id="play"><h1>Start the movie <i data-feather="video"></i></h1></button>
-            	<video id="player" controls></video>
+                <button id="play" class="ready center"><h1>Start the movie <i data-feather="video"></i></h1></button>
+                <video id="player" controls class="playing center"></video>
             </section>
         </main>
     <script src="/static/shared/signal.js"></script>

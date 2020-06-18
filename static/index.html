@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <style>
+            main {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+			.button {
+				padding: 25px;
+    			border: 1px solid #ccc;
+    			border-radius: 40px;
+			}
+			input[type=text] {
+				padding: 12px 20px;
+				margin: 8px 0;
+				box-sizing: border-box;
+				vertical-align: middle;
+				border: 1px solid #eee;
+			}
+			button {
+				background: white;
+				cursor: pointer;
+				border: none;
+			}
+        </style>
+    </head>
+    <body>
+        <main>
+			<h1 class="button"><a href="/booth">Open a new Theater</a></h1>
+            <h2>or...</h2>
+			<form>
+			<label><button><h1>Enter </h1></button><input type="text" placeholder="a Theater"></input></label></h1>
+			</form>
+        </main>
+	<script>
+		const form = document.getElementsByTagName("form")[0];
+		form.onsubmit = (e) => {
+			e.preventDefault();
+			const theater = document.getElementsByTagName("input")[0].value;
+			window.location.href = `/audience/${theater}`;
+		}
+	</script>
+    </body>
+</html>

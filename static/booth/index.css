@@ -1,55 +1,63 @@
+.center {
+  margin: auto;
+}
+
+.ready {
+  display: none;
+}
+
+.playing {
+  display: none;
+}
+
 main {
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center; }
-  main section#setup {
-    width: 100%;
-    display: flex;
-    flex-direction: column; }
-    main section#setup label {
-      margin: auto;
-      width: 40%;
-      min-width: 10rem;
-      max-width: 30rem;
-      text-align: center;
-      display: block;
-      cursor: pointer;
-      border: 1px solid #ccc;
-      border-radius: 40px; }
-      main section#setup label svg {
-        vertical-align: middle;
-        width: 2rem;
-        height: 2rem; }
-      main section#setup label input {
-        display: none; }
-    main section#setup button {
-      width: 40%;
-      margin: auto;
-      border-radius: 40px;
-      background: white;
-      cursor: pointer;
-      display: none; }
-      main section#setup button svg {
-        vertical-align: middle;
-        width: 2rem;
-        height: 2rem; }
-  main video {
-    width: 100%;
-    display: none; }
+  align-items: center;
+}
+main section#setup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+main section#setup label {
+  width: 40%;
+  min-width: 10rem;
+  max-width: 30rem;
+  text-align: center;
+  display: block;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 40px;
+}
+main section#setup label svg {
+  vertical-align: middle;
+  width: 2rem;
+  height: 2rem;
+}
+main section#setup label input {
+  display: none;
+}
+main section#setup button {
+  width: 40%;
+  border-radius: 40px;
+  background: white;
+  cursor: pointer;
+}
+main section#setup button svg {
+  vertical-align: middle;
+  width: 2rem;
+  height: 2rem;
+}
+main a#copy {
+  vertical-align: middle;
+}
 
-main[data-state=ready] section#setup button {
-  display: block; }
-main[data-state=ready] section#setup label {
-  border: none; }
-  main[data-state=ready] section#setup label span#load {
-    display: none; }
+main[data-state=ready] .ready {
+  display: initial;
+}
 
-main[data-state=playing] section#setup button {
-  display: none; }
-main[data-state=playing] section#setup label {
-  border: none; }
-  main[data-state=playing] section#setup label span#load {
-    display: none; }
-main[data-state=playing] section#setup video {
-  display: block; }
+main[data-state=playing] .playing {
+  display: initial;
+}

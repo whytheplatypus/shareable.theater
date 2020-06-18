@@ -23,7 +23,8 @@ function uuidv4() {
     });
 }
 
-let inboundStream;
+const inboundStream = new MediaStream();
+watcher.srcObject = inboundStream;
 
 async function addWatcher(watcher) {
     const signaler = new Signal("viewer");
@@ -32,10 +33,6 @@ async function addWatcher(watcher) {
     function gotRemoteStream(event) {
         main_element.setAttribute("data-state", "ready");
 		console.debug(event.track);
-		if (!inboundStream) {
-			inboundStream = new MediaStream();
-			watcher.srcObject = inboundStream;
-		}
 		// hack: assumes 1 movie = 2 tracks
         if (inboundStream.getTracks().length > 1) {
             inboundStream.getTracks().forEach(track => inboundStream.removeTrack(track));

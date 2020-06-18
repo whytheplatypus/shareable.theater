@@ -1,4 +1,0 @@
-package main
-
-// Entirely inspired by https://github.com/jitsi/js-utils/blob/master/random/roomNameGenerator.js
-// With data from https://raw.githubusercontent.com/en-wl/wordlist/master/pos/part-of-speech.txt

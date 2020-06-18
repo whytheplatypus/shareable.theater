@@ -275,6 +275,9 @@ func main() {
 		theater := vars["theater"]
 		serveViewer(w, r, theater)
 	})
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "../static/index.html")
+	})
 	http.Handle("/", r)
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {
