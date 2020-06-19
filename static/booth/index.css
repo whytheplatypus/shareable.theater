@@ -31,10 +31,6 @@ svg {
   vertical-align: middle;
 }
 
-video#player {
-  display: none;
-}
-
 main {
   height: 100%;
   display: flex;
@@ -68,6 +64,10 @@ main section#setup button svg {
   vertical-align: middle;
   width: 2rem;
   height: 2rem;
+}
+
+div.ffvideo video#sharer {
+  display: none;
 }
 
 main[data-state=initial] .stateful.initial {

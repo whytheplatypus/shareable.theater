@@ -9,10 +9,6 @@ svg {
 	vertical-align: middle;
 }
 
-video#player {
-	display: none;
-}
-
 main {
 	height: 100%;
 	display: flex;
@@ -47,6 +43,12 @@ main {
 				height: 2rem;
 			}
 		}
+	}
+}
+
+div.ffvideo {
+	video#sharer {
+		display: none;
 	}
 }
 

@@ -16,17 +16,18 @@
                 <button id="play" class="button center stateful ready">
                     <h1>Start the movie <i data-feather="video"></i></h1>
                 </button>
-            	<video id="player" autoplay></video>
-                <video id="sharer" controls autoplay class="stateful playing center"></video>
-
+                <div class="stateful playing center ffvideo">
+                    <video id="sharer" autoplay></video>
+                    <video id="player" autoplay controls></video>
+                </div>
             </section>
         </main>
-    <script src="/static/shared/signal.js"></script>
-    <script src="/static/shared/websocket.js"></script>
-    <script src="/static/booth/share.js"></script>
-    <script src="/static/booth/index.js"></script>
-    <script>
-        feather.replace();
-    </script>
+        <script src="/static/shared/signal.js"></script>
+        <script src="/static/shared/websocket.js"></script>
+        <script src="/static/booth/share.js"></script>
+        <script src="/static/booth/index.js"></script>
+        <script>
+            feather.replace();
+        </script>
     </body>
 </html>
