@@ -39,6 +39,7 @@ main {
 			}
 		}
 		button {
+			border: none;
 			width: 40%;
 			svg {
 				vertical-align: middle;
@@ -46,6 +47,12 @@ main {
 				height: 2rem;
 			}
 		}
+	}
+}
+
+main[data-state=initial] {
+	.stateful.initial {
+		display: initial;
 	}
 }
 

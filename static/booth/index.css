@@ -1,3 +1,16 @@
+@font-face {
+  font-family: "awakebold";
+  src: url("/static/Awake/@font-face/awake-bold-webfont.woff");
+}
+@font-face {
+  font-family: "awakeregular";
+  src: url("/static/Awake/@font-face/awake-regular-webfont.woff");
+}
+html {
+  font-family: awakebold, awakeregular, helvetica neue, Helvetica, Arial, sans-serif;
+  text-transform: uppercase;
+}
+
 .stateful {
   display: none;
 }
@@ -8,10 +21,10 @@
 
 .button {
   cursor: pointer;
-  border: 1px solid #ccc;
-  border-radius: 40px;
+  border-bottom: 1px solid #ccc;
   background: white;
   cursor: pointer;
+  padding: 20px;
 }
 
 svg {
@@ -48,12 +61,17 @@ main section#setup label input {
   display: none;
 }
 main section#setup button {
+  border: none;
   width: 40%;
 }
 main section#setup button svg {
   vertical-align: middle;
   width: 2rem;
   height: 2rem;
+}
+
+main[data-state=initial] .stateful.initial {
+  display: initial;
 }
 
 main[data-state=ready] .stateful.ready {

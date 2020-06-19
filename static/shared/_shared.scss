@@ -1,3 +1,17 @@
+@font-face {
+	font-family: "awakebold";
+	src: url("/static/Awake/@font-face/awake-bold-webfont.woff");
+}
+@font-face {
+	font-family: "awakeregular";
+	src: url("/static/Awake/@font-face/awake-regular-webfont.woff");
+}
+
+html {
+	font-family: awakebold,awakeregular,helvetica neue,Helvetica,Arial,sans-serif;
+	text-transform: uppercase;
+}
+
 .stateful {
 	display: none;
 }
@@ -8,8 +22,8 @@
 
 .button {
 	cursor: pointer;
-	border: 1px solid #ccc;
-	border-radius: 40px;
+	border-bottom: 1px solid #ccc;
 	background: white;
 	cursor: pointer;
+	padding: 20px;
 }

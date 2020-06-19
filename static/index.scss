@@ -1,0 +1,26 @@
+@use "shared/_shared.scss";
+
+main {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+input[type=text] {
+	padding: 12px 20px;
+	margin: 8px 0;
+	border: none;
+	font-size: 2rem;
+}
+
+button {
+	background: white;
+	border: none;
+	font-size: 2rem;
+}
+
+footer {
+	font-size: 0.5em;
+}

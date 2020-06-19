@@ -32,28 +32,18 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-}
-main section {
   flex-direction: column;
 }
-main section h1.waiting {
-  width: 100%;
-  text-align: center;
-}
-main section button {
-  min-width: 20rem;
-  margin: auto;
+
+input[type=text] {
+  padding: 12px 20px;
+  margin: 8px 0;
+  border: none;
+  font-size: 2rem;
 }
 
-main[data-state=waiting] .stateful.waiting {
-  display: initial;
-}
-
-main[data-state=ready] .stateful.ready {
-  display: initial;
-}
-
-main[data-state=playing] .stateful.playing {
-  display: initial;
+button {
+  background: white;
+  border: none;
+  font-size: 2rem;
 }

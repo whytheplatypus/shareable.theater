@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'AwakeRegular';
+    src: url('awake-regular-webfont.eot');
+    src: url('awake-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('awake-regular-webfont.woff') format('woff'),
+         url('awake-regular-webfont.ttf') format('truetype'),
+         url('awake-regular-webfont.svg#AwakeRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'AwakeItalic';
+    src: url('awake-italic-webfont.eot');
+    src: url('awake-italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('awake-italic-webfont.woff') format('woff'),
+         url('awake-italic-webfont.ttf') format('truetype'),
+         url('awake-italic-webfont.svg#AwakeItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'AwakeLight';
+    src: url('awake-light-webfont.eot');
+    src: url('awake-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('awake-light-webfont.woff') format('woff'),
+         url('awake-light-webfont.ttf') format('truetype'),
+         url('awake-light-webfont.svg#AwakeLight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'AwakeLightItalic';
+    src: url('awake-lightitalic-webfont.eot');
+    src: url('awake-lightitalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('awake-lightitalic-webfont.woff') format('woff'),
+         url('awake-lightitalic-webfont.ttf') format('truetype'),
+         url('awake-lightitalic-webfont.svg#AwakeLightItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'AwakeBold';
+    src: url('awake-bold-webfont.eot');
+    src: url('awake-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('awake-bold-webfont.woff') format('woff'),
+         url('awake-bold-webfont.ttf') format('truetype'),
+         url('awake-bold-webfont.svg#AwakeBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'AwakeBoldItalic';
+    src: url('awake-bolditalic-webfont.eot');
+    src: url('awake-bolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('awake-bolditalic-webfont.woff') format('woff'),
+         url('awake-bolditalic-webfont.ttf') format('truetype'),
+         url('awake-bolditalic-webfont.svg#AwakeBoldItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
