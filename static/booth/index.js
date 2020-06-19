@@ -1,22 +1,10 @@
-const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
-
+const servers = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
 const main_element = document.getElementsByTagName("main")[0];
-const video_source = document.getElementById("src");
+const video_source_input = document.getElementById("src");
 const play_button = document.getElementById("play");
 const player = document.getElementById("player");
 const sharer = document.getElementById("sharer")
 player.captureStream = player.captureStream || player.mozCaptureStream;
-function playVideo(file) {
-	main_element.setAttribute("data-state", "playing");
-
-	const video_source_url = URL.createObjectURL(file);
-    player.src = video_source_url;
-}
-play_button.addEventListener("click", function(ev) {
-	ev.preventDefault();
-    playVideo(video_source.files[0]);
-});
-
 // there is a bug in firefox
 // the mozCaptureStream() call removes the audio from the video element and stream.
 // Likely this will be fixed if and when mozCaptureStream stops being prefixed
@@ -25,12 +13,52 @@ sharer.srcObject = player.captureStream()
 const stream = player.captureStream()
 stream.onaddtrack = updateTracks;
 
-
-video_source.addEventListener("change", function(ev) {
-    main_element.setAttribute("data-state", "ready");
-    document.getElementById("movie-name").innerHTML = ` ${video_source.files[0].name}`;
+play_button.addEventListener("click", function(ev) {
+	ev.preventDefault();
+	const video_source_url = URL.createObjectURL(video_source_input.files[0]);
+    player.src = video_source_url;
 });
 
+// states
+video_source_input.addEventListener("change", function(ev) {
+    main_element.setAttribute("data-state", "ready");
+    document.getElementById("movie-name").innerHTML = ` ${video_source_input.files[0].name}`;
+});
+
+player.addEventListener("play", function() {
+    main_element.setAttribute("data-state", "playing");
+})
+
+const connections = {};
+
+function updateTracks(e) {
+	for (let conn in connections) {
+    	connections[conn].addTrack(e.track);
+	}
+}
+
+async function main() {
+	console.debug("loading application");
+    const signaler = new Signal("host", "host");
+	await signaler.configure();
+
+    signaler.onmessage = async (msg) => {
+        if (!(msg.from in connections)) {
+            const host = new RTCPeerConnection(servers);
+
+            connections[msg.from] = host;
+
+            stream.getTracks().forEach(track => host.addTrack(track));
+
+            configure(host, signaler, msg.from);
+
+			return;
+        }
+        await connections[msg.from].onmessage(msg);
+    };
+
+}
+main();
 
 function configure(host, signaler, peer) {
     host.onconnectionstatechange = e => console.debug(host.connectionState);
@@ -72,47 +100,3 @@ function configure(host, signaler, peer) {
 
     return host;
 }
-
-let connections = {};
-
-function updateTracks(e) {
-	for (let conn in connections) {
-    	connections[conn].addTrack(e.track);
-	}
-}
-
-async function main() {
-	console.debug("loading application");
-
-    const signaler = new Signal("host");
-	await signaler.configure();
-	signaler.send({msg: "hello world"});
-
-    signaler.onmessage = async (msg) => {
-		console.debug("host got", msg);
-        if (!(msg.from in connections)) {
-            const host = new RTCPeerConnection(configuration);
-            connections[msg.from] = host;
-            console.debug("created host");
-
-            stream.getTracks().forEach(track => host.addTrack(track));
-
-            configure(host, signaler, msg.from);
-
-			return;
-        }
-        await connections[msg.from].onmessage(msg);
-    };
-}
-main();
-
-const audienceLink = document.querySelector("#audience-link");
-const audienceUrl = window.location.href.replace("booth", "audience");
-audienceLink.value = audienceUrl;
-
-function copy() {
-  audienceLink.select();
-  document.execCommand("copy");
-}
-
-document.querySelector("#copy").onclick = copy;
