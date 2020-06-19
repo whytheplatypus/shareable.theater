@@ -1,3 +1,10 @@
+@use "../shared/_shared.scss";
+
+// States
+.waiting{}
+.ready{}
+.playing{}
+
 main {
 	height: 100%;
 	display: flex;
@@ -13,34 +20,24 @@ main {
 		button {
 			min-width: 20rem;
 			margin: auto;
-			border-radius: 40px;
-			background: white;
-			cursor: pointer;
-			margin: auto;
-			display: none;
 		}
 	}
-	video {
-		display: none;
+}
+
+main[data-state=waiting] {
+	.stateful.waiting{
+		display: initial;
 	}
 }
 
 main[data-state=ready] {
-	section {
-		h1.waiting {
-			display: none;
-		}
-		button {
-			display: block;
-		}
+	.stateful.ready{
+		display: initial;
 	}
 }
 
 main[data-state=playing] {
-	section {
-		display: none;
-	}
-	video {
-		display: block;
+	.stateful.playing {
+		display: initial;
 	}
 }

@@ -7,15 +7,17 @@
         <main>
             <section id="setup">
                 <h3 class="center">Invite your audience to <input type="text" id="audience-link" readonly></input><a id="copy"><i data-feather="copy"></i></a></h3>
-                <label class="center">
+                <label class="button center">
                     <input type="file" id="src" accept="video/*"></input>
                     <h1>
-                        <span id="load">Load </span><i data-feather="film"></i><span id="movie-name"></span>
+                        <span id="load" class="stateful initial">Load </span><i data-feather="film"></i><span id="movie-name"></span>
                     </h1>
                 </label>
-                <button id="play" class="ready center"><h1>Start the movie <i data-feather="video"></i></h1></button>
+                <button id="play" class="button center stateful ready">
+                    <h1>Start the movie <i data-feather="video"></i></h1>
+                </button>
             	<video id="player" autoplay></video>
-                <video id="sharer" controls autoplay class="playing center"></video>
+                <video id="sharer" controls autoplay class="stateful playing center"></video>
 
             </section>
         </main>
