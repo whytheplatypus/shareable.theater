@@ -1,6 +1,6 @@
 function connectAs(path) {
 	return new Promise((resolve, reject) => {
-		const conn = new WebSocket(`ws://${window.location.host}${window.location.pathname}/signal`);
+		const conn = new WebSocket(`wss://${window.location.host}${window.location.pathname}/signal`);
 		conn.onopen = () => {
 			resolve(conn);
 		};
