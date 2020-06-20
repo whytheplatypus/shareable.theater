@@ -9,6 +9,7 @@ watcher.srcObject = inboundStream;
 
 watchButton.onclick = () => {
     main_element.setAttribute("data-state", "playing");
+	watcher.play();
 }
 
 function configureViewer(signaler, name) {
