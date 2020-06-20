@@ -1,4 +1,3 @@
-const servers = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
 const main_element = document.getElementsByTagName("main")[0];
 
 const name = uuidv4();
