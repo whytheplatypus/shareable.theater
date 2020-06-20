@@ -4,8 +4,6 @@ const main_element = document.getElementsByTagName("main")[0];
 const name = uuidv4();
 const watchButton = document.getElementById("watch");
 const watcher = document.getElementById("screen");
-const inboundStream = new MediaStream();
-watcher.srcObject = inboundStream;
 
 watchButton.onclick = () => {
     main_element.setAttribute("data-state", "playing");
@@ -20,14 +18,9 @@ function configureViewer(signaler, name) {
 
 function gotRemoteStream(event) {
 	main_element.setAttribute("data-state", "ready");
-	console.debug(event.track);
-	// hack: assumes 1 movie = 2 tracks
-	if (inboundStream.getTracks().length > 1) {
-		inboundStream.getTracks().forEach(track => inboundStream.removeTrack(track));
-	}
-	inboundStream.addTrack(event.track);
-
-	console.debug(inboundStream.getTracks());
+    if (watcher.srcObject !== event.streams[0]) {
+        watcher.srcObject = event.streams[0];
+    }
 }
 
 async function main(watcher) {

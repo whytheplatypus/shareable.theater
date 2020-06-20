@@ -6,20 +6,12 @@ import (
 
 const inUse = `<html>
     <head>
-        <style>
-            main {
-                height: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                flex-direction: column;
-            }
-        </style>
+        <link href="/static/index.css" rel="stylesheet">
     </head>
     <body>
         <main>
             <h1>This theater is currently in use.</h1>
-	    <h2><a href="/booth/{{ . }}">{{ . }}</a> should be free!</h2>
+	    <h2><a href="/projectionist/{{ . }}">{{ . }}</a> should be free!</h2>
         </main>
     </body>
 </html>`

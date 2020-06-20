@@ -3,20 +3,24 @@ const main_element = document.getElementsByTagName("main")[0];
 const video_source_input = document.getElementById("src");
 const play_button = document.getElementById("play");
 const player = document.getElementById("player");
-const sharer = document.getElementById("sharer")
-player.captureStream = player.captureStream || player.mozCaptureStream;
 // there is a bug in firefox
 // the mozCaptureStream() call removes the audio from the video element and stream.
 // Likely this will be fixed if and when mozCaptureStream stops being prefixed
 // For now using a proxi video element for local playback seems to solve this
-sharer.srcObject = player.captureStream()
-const stream = player.captureStream()
-stream.onaddtrack = updateTracks;
+const fallback_player = document.getElementById("fallback-player")
+player.captureStream = player.captureStream || player.mozCaptureStream;
+let remoteStream;
+let controlStream;
 
 play_button.addEventListener("click", function(ev) {
 	ev.preventDefault();
 	const video_source_url = URL.createObjectURL(video_source_input.files[0]);
     player.src = video_source_url;
+    remoteStream = new MediaStream();
+    controlStream = player.captureStream()
+    controlStream.onaddtrack = updateTracks;
+    fallback_player.srcObject = controlStream;
+    player.load();
 });
 
 // states
@@ -29,13 +33,15 @@ player.addEventListener("play", function() {
     main_element.setAttribute("data-state", "playing");
 })
 
+
 const connections = {};
 
 function updateTracks(e) {
 	for (let conn in connections) {
-    	connections[conn].addTrack(e.track);
+    	connections[conn].addTrack(e.track, remoteStream);
 	}
 }
+
 
 async function main() {
 	console.debug("loading application");
@@ -48,7 +54,9 @@ async function main() {
 
             connections[msg.from] = projectionist;
 
-            stream.getTracks().forEach(track => projectionist.addTrack(track));
+            if (controlStream) {
+                controlStream.getTracks().forEach(track => projectionist.addTrack(track, remoteStream));
+            }
 
             configure(projectionist, signaler, msg.from);
 

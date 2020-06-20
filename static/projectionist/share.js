@@ -1,5 +1,5 @@
 const audienceLink = document.querySelector("#audience-link");
-const audienceUrl = window.location.href.replace("booth", "audience");
+const audienceUrl = window.location.href.replace("projectionist", "audience");
 audienceLink.value = audienceUrl;
 
 function copy() {
