@@ -39,18 +39,18 @@ function updateTracks(e) {
 
 async function main() {
 	console.debug("loading application");
-    const signaler = new Signal("host", "host");
+    const signaler = new Signal("projectionist", "projectionist");
 	await signaler.configure();
 
     signaler.onmessage = async (msg) => {
         if (!(msg.from in connections)) {
-            const host = new RTCPeerConnection(servers);
+            const projectionist = new RTCPeerConnection(servers);
 
-            connections[msg.from] = host;
+            connections[msg.from] = projectionist;
 
-            stream.getTracks().forEach(track => host.addTrack(track));
+            stream.getTracks().forEach(track => projectionist.addTrack(track));
 
-            configure(host, signaler, msg.from);
+            configure(projectionist, signaler, msg.from);
 
 			return;
         }
@@ -60,21 +60,21 @@ async function main() {
 }
 main();
 
-function configure(host, signaler, peer) {
-    host.onconnectionstatechange = e => console.debug(host.connectionState);
-    host.onicecandidate = ({candidate}) => signaler.send({candidate, from: "host", to: peer});
+function configure(projectionist, signaler, peer) {
+    projectionist.onconnectionstatechange = e => console.debug(projectionist.connectionState);
+    projectionist.onicecandidate = ({candidate}) => signaler.send({candidate, from: "projectionist", to: peer});
 
-    host.onnegotiationneeded = async () => {
+    projectionist.onnegotiationneeded = async () => {
         try {
-            await host.setLocalDescription(await host.createOffer());
-            signaler.send({ description: host.localDescription, from: "host", to: peer });
+            await projectionist.setLocalDescription(await projectionist.createOffer());
+            signaler.send({ description: projectionist.localDescription, from: "projectionist", to: peer });
         } catch(err) {
             console.error(err);
         } 
     };
 
-    host.onmessage = async ({ description, candidate, from, to }) => {
-        let pc = host;
+    projectionist.onmessage = async ({ description, candidate, from, to }) => {
+        let pc = projectionist;
 
         try {
             if (description) {
@@ -98,5 +98,5 @@ function configure(host, signaler, peer) {
         }
     }
 
-    return host;
+    return projectionist;
 }

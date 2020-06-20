@@ -11,6 +11,73 @@ import (
 
 var upgrader = websocket.Upgrader{}
 
+type Theater struct {
+	Projectionist chan []byte
+	Audience      map[chan []byte]bool
+}
+
+func (c *Theater) audienceWebsocket(w http.ResponseWriter, r *http.Request) {
+
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	client := make(chan []byte, 256)
+	c.Audience[client] = true
+	messages := make(chan []byte, 256)
+
+	// read
+	go read(messages, conn)
+	go func(messages <-chan []byte) {
+		defer delete(c.Audience, client)
+		defer recoverln("Recovered from audience websocket read handler")
+		for {
+			message, ok := <-messages
+			if !ok {
+				return
+			}
+			log.Println("clients got message", string(message))
+			log.Println("clients sent message to host", string(message))
+			c.Projectionist <- message
+		}
+	}(messages)
+
+	go write(client, conn)
+}
+
+func (c *Theater) projectionistWebsocket(w http.ResponseWriter, r *http.Request) {
+
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	// from https://github.com/gorilla/websocket/blob/master/examples/chat/client.go
+	messages := make(chan []byte, 256)
+	// read
+	go read(messages, conn)
+	go func(messages <-chan []byte) {
+		defer recoverln("Recovered from audience websocket read handler")
+		for {
+			message, ok := <-messages
+			if !ok {
+				return
+			}
+			log.Println("host got message", string(message))
+			for client, _ := range c.Audience {
+				go func(client chan []byte, message []byte) {
+					defer recoverln("Recovered during write to client")
+					client <- message
+				}(client, message)
+			}
+		}
+	}(messages)
+	// write
+	go write(c.Projectionist, conn)
+}
+
 func recoverln(msg string) {
 	if r := recover(); r != nil {
 		log.Println(msg, r)
@@ -76,71 +143,4 @@ func read(messages chan<- []byte, conn *websocket.Conn) {
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
 		messages <- message
 	}
-}
-
-type Room struct {
-	Host    chan []byte
-	Clients map[chan []byte]bool
-}
-
-func (room *Room) audienceWebsocket(w http.ResponseWriter, r *http.Request) {
-
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	client := make(chan []byte, 256)
-	room.Clients[client] = true
-	messages := make(chan []byte, 256)
-
-	// read
-	go read(messages, conn)
-	go func(messages <-chan []byte) {
-		defer delete(room.Clients, client)
-		defer recoverln("Recovered from audience websocket read handler")
-		for {
-			message, ok := <-messages
-			if !ok {
-				return
-			}
-			log.Println("clients got message", string(message))
-			log.Println("clients sent message to host", string(message))
-			room.Host <- message
-		}
-	}(messages)
-
-	go write(client, conn)
-}
-
-func (room *Room) projectionistWebsocket(w http.ResponseWriter, r *http.Request) {
-
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	// from https://github.com/gorilla/websocket/blob/master/examples/chat/client.go
-	messages := make(chan []byte, 256)
-	// read
-	go read(messages, conn)
-	go func(messages <-chan []byte) {
-		defer recoverln("Recovered from audience websocket read handler")
-		for {
-			message, ok := <-messages
-			if !ok {
-				return
-			}
-			log.Println("host got message", string(message))
-			for client, _ := range room.Clients {
-				go func(client chan []byte, message []byte) {
-					defer recoverln("Recovered during write to client")
-					client <- message
-				}(client, message)
-			}
-		}
-	}(messages)
-	// write
-	go write(room.Host, conn)
 }

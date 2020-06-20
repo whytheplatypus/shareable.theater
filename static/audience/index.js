@@ -14,7 +14,7 @@ watchButton.onclick = () => {
 
 function configureViewer(signaler, name) {
     const viewer = new RTCPeerConnection(servers);
-    viewer.onicecandidate = ({candidate}) => signaler.send({candidate, from: name, to: "host"});
+    viewer.onicecandidate = ({candidate}) => signaler.send({candidate, from: name, to: "projectionist"});
     return viewer;
 }
 
@@ -64,7 +64,7 @@ async function main(watcher) {
     }
 
 	await viewer.setLocalDescription(await viewer.createOffer());
-	signaler.send({description: viewer.localDescription, from: name, to: "host"});
+	signaler.send({description: viewer.localDescription, from: name, to: "projectionist"});
 }
 
 main(watcher)

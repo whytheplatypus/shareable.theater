@@ -32,7 +32,7 @@ var (
 	space   = []byte{' '}
 )
 
-var rooms = map[string]*Room{}
+var cinema = map[string]*Theater{}
 
 var addr = flag.String("addr", ":8080", "http service address")
 
@@ -40,16 +40,16 @@ func main() {
 	flag.Parse()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/booth/", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/projectionist/", func(w http.ResponseWriter, r *http.Request) {
 		buf := &bytes.Buffer{}
 		tmpl.Execute(buf, "")
-		theater := fmt.Sprintf("/booth/%s", buf.String())
+		theater := fmt.Sprintf("/projectionist/%s", buf.String())
 		http.Redirect(w, r, theater, 302)
 	})
-	r.HandleFunc("/booth/{theater}", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/projectionist/{theater}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		theater := vars["theater"]
-		_, ok := rooms[theater]
+		_, ok := cinema[theater]
 		if ok {
 			log.Println("room is already taken")
 			buf := &bytes.Buffer{}
@@ -58,42 +58,42 @@ func main() {
 			w.WriteHeader(http.StatusConflict)
 			return
 		}
-		if len(rooms) > THEATER_LIMIT {
-			w.WriteHeader(http.StatusServiceUnavailable)
+		if len(cinema) > THEATER_LIMIT {
+			http.Error(w, "The whole building is full", http.StatusServiceUnavailable)
 			return
 		}
-		http.ServeFile(w, r, "../static/booth/index.html")
+		http.ServeFile(w, r, "../static/projectionist/index.html")
 	})
-	r.HandleFunc("/booth/{theater}/signal", func(w http.ResponseWriter, r *http.Request) {
-		if len(rooms) > THEATER_LIMIT {
-			w.WriteHeader(http.StatusServiceUnavailable)
+	r.HandleFunc("/projectionist/{theater}/signal", func(w http.ResponseWriter, r *http.Request) {
+		if len(cinema) > THEATER_LIMIT {
+			http.Error(w, "The whole building is full", http.StatusServiceUnavailable)
 			return
 		}
 		vars := mux.Vars(r)
 		theater := vars["theater"]
-		_, ok := rooms[theater]
+		_, ok := cinema[theater]
 		if ok {
-			log.Println("room is taken")
+			http.Error(w, "That theater is occupied", http.StatusConflict)
 			return
 		}
 
-		rooms[theater] = &Room{
-			Host:    make(chan []byte, 256),
-			Clients: map[chan []byte]bool{},
+		cinema[theater] = &Theater{
+			Projectionist: make(chan []byte, 256),
+			Audience:      map[chan []byte]bool{},
 		}
-		rooms[theater].projectionistWebsocket(w, r)
+		cinema[theater].projectionistWebsocket(w, r)
 	})
 
 	r.HandleFunc("/audience/{theater}", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		theater := vars["theater"]
-		_, ok := rooms[theater]
+		_, ok := cinema[theater]
 		if !ok {
-			http.ServeFile(w, r, "../static/empty.html")
 			w.WriteHeader(http.StatusNotFound)
+			http.ServeFile(w, r, "../static/empty.html")
 			return
 		}
-		if len(rooms[theater].Clients) > THEATER_CAPACITY {
+		if len(cinema[theater].Audience) > THEATER_CAPACITY {
 			http.ServeFile(w, r, "../static/full.html")
 			return
 		}
@@ -103,9 +103,9 @@ func main() {
 	r.HandleFunc("/audience/{theater}/signal", func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		theater := vars["theater"]
-		room, ok := rooms[theater]
+		room, ok := cinema[theater]
 		if !ok {
-			// 404
+			http.NotFound(w, r)
 			return
 		}
 		room.audienceWebsocket(w, r)
