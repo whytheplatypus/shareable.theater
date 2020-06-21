@@ -2,6 +2,7 @@ const main_element = document.getElementsByTagName("main")[0];
 const video_source_input = document.getElementById("src");
 const play_button = document.getElementById("play");
 const player = document.getElementById("player");
+const share_screen = document.getElementById("share-screen");
 // there is a bug in firefox
 // the mozCaptureStream() call removes the audio from the video element and stream.
 // Likely this will be fixed if and when mozCaptureStream stops being prefixed
@@ -11,9 +12,38 @@ player.captureStream = player.captureStream || player.mozCaptureStream;
 let remoteStream;
 let controlStream;
 
+share_screen.addEventListener("click", async function(ev) {
+    const gdmOptions = {
+        video: true,
+        audio: true
+    };
+    let captureStream = null;
+
+    try {
+        captureStream = await navigator.mediaDevices.getDisplayMedia(gdmOptions);
+    } catch(err) {
+        console.error("Error: " + err);
+        return
+    }
+    let tracks = captureStream.getTracks()
+    for (let track in tracks) {
+        tracks[track].addEventListener('ended', e => {
+            console.debug(e);
+            console.debug('Capture stream inactive - stop streaming!');
+            main_element.setAttribute("data-state", "initial");
+        });
+    }
+    player.srcObject = captureStream;
+    remoteStream = new MediaStream();
+    controlStream = player.captureStream()
+    controlStream.onaddtrack = updateTracks;
+    fallback_player.srcObject = controlStream;
+    player.load();
+});
+
 play_button.addEventListener("click", function(ev) {
-	ev.preventDefault();
-	const video_source_url = URL.createObjectURL(video_source_input.files[0]);
+    ev.preventDefault();
+    const video_source_url = URL.createObjectURL(video_source_input.files[0]);
     player.src = video_source_url;
     remoteStream = new MediaStream();
     controlStream = player.captureStream()
@@ -36,16 +66,16 @@ player.addEventListener("play", function() {
 const connections = {};
 
 function updateTracks(e) {
-	for (let conn in connections) {
-    	connections[conn].addTrack(e.track, remoteStream);
-	}
+    for (let conn in connections) {
+        connections[conn].addTrack(e.track, remoteStream);
+    }
 }
 
 
 async function main() {
-	console.debug("loading application");
+    console.debug("loading application");
     const signaler = new Signal("projectionist", "projectionist");
-	await signaler.configure();
+    await signaler.configure();
 
     signaler.onmessage = async (msg) => {
         if (!(msg.from in connections)) {
@@ -59,7 +89,7 @@ async function main() {
 
             configure(projectionist, signaler, msg.from);
 
-			return;
+            return;
         }
         await connections[msg.from].onmessage(msg);
     };
