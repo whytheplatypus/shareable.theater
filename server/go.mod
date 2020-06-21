@@ -1,4 +1,4 @@
-module gitlab.com/whytheplatypus/platypus.video
+module github.com/whytheplatypus/shareable.theater
 
 go 1.14
 
