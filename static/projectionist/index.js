@@ -34,10 +34,9 @@ share_screen.addEventListener("click", async function(ev) {
         });
     }
     player.srcObject = captureStream;
-    remoteStream = new MediaStream();
-    controlStream = player.captureStream()
+    remoteStream = captureStream;
+    controlStream = captureStream;
     controlStream.onaddtrack = updateTracks;
-    fallback_player.srcObject = controlStream;
     player.load();
 });
 
