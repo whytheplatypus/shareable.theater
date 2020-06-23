@@ -7,6 +7,12 @@
 
 html {
 	background: #080808;
+	color: white;
+}
+
+a.button {
+	background: #080808;
+	color: white;
 }
 
 main {
@@ -37,6 +43,9 @@ main[data-state=waiting] {
 main[data-state=ready] {
 	.stateful.ready{
 		display: initial;
+	}
+	a.button.stateful.ready {
+		display: block;
 	}
 }
 
