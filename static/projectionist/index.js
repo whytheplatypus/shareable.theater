@@ -7,8 +7,12 @@ const share_screen = document.getElementById("share-screen");
 // the mozCaptureStream() call removes the audio from the video element and stream.
 // Likely this will be fixed if and when mozCaptureStream stops being prefixed
 // For now using a proxi video element for local playback seems to solve this
-const fallback_player = document.getElementById("fallback-player")
-player.captureStream = player.captureStream || player.mozCaptureStream;
+player.captureStream = player.captureStream || function() {
+    const fallback_player = document.getElementById("fallback-player")
+    const stream = player.mozCaptureStream.apply(arguments);
+    fallback_player.srcObject = stream;
+    return stream;
+}.bind(player);
 let remoteStream;
 let controlStream;
 
@@ -33,8 +37,8 @@ share_screen.addEventListener("click", async function(ev) {
             main_element.setAttribute("data-state", "initial");
         });
     }
+    remoteStream = new MediaStream();
     player.srcObject = captureStream;
-    remoteStream = captureStream;
     controlStream = captureStream;
     controlStream.onaddtrack = updateTracks;
     player.load();
@@ -47,7 +51,6 @@ play_button.addEventListener("click", function(ev) {
     remoteStream = new MediaStream();
     controlStream = player.captureStream()
     controlStream.onaddtrack = updateTracks;
-    fallback_player.srcObject = controlStream;
     player.load();
 });
 
