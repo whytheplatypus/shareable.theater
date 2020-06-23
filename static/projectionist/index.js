@@ -96,13 +96,18 @@ async function main() {
                 }
             }
 
+            // if there is a movie playing
             if (controlStream) {
-                controlStream.getTracks().forEach(track => projectionist.addTrack(track, remoteStream));
+                controlStream.getTracks().forEach(track => {
+                    try {
+                        projectionist.addTrack(track, remoteStream)
+                    } catch (err) {
+                        console.error(msg.from, err);
+                    }
+                });
             }
 
             configure(projectionist, signaler, msg.from);
-
-            return;
         }
         await connections[msg.from].onmessage(msg);
     };
