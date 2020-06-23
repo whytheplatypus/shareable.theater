@@ -83,6 +83,17 @@ async function main() {
 
             connections[msg.from] = projectionist;
 
+            projectionist.onconnectionstatechange = function(event) {
+                console.debug(msg.from, "connection state:", event);
+                switch(projectionist.connectionState) {
+                    case "disconnected":
+                    case "failed":
+                    case "closed":
+                        delete connections[msg.from];
+                        break;
+                }
+            }
+
             if (controlStream) {
                 controlStream.getTracks().forEach(track => projectionist.addTrack(track, remoteStream));
             }
@@ -98,7 +109,6 @@ async function main() {
 main();
 
 function configure(projectionist, signaler, peer) {
-    projectionist.onconnectionstatechange = e => console.debug(projectionist.connectionState);
     projectionist.onicecandidate = ({candidate}) => signaler.send({candidate, from: "projectionist", to: peer});
 
     projectionist.onnegotiationneeded = async () => {
