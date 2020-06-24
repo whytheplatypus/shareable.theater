@@ -19,7 +19,11 @@ let controlStream;
 share_screen.addEventListener("click", async function(ev) {
     const gdmOptions = {
         video: true,
-        audio: true
+        audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            sampleRate: 44100
+        }
     };
     let captureStream = null;
 
