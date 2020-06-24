@@ -1,5 +1,9 @@
 @use "../shared/_shared.scss";
 
+body {
+	height: 100%;
+}
+
 // States
 .initial { }
 .ready { }

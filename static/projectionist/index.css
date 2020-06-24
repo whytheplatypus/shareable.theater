@@ -27,6 +27,10 @@ html {
   padding: 20px;
 }
 
+body {
+  height: 100%;
+}
+
 svg {
   vertical-align: middle;
 }

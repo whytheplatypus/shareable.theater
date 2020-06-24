@@ -9,7 +9,9 @@ const share_screen = document.getElementById("share-screen");
 // For now using a proxi video element for local playback seems to solve this
 player.captureStream = player.captureStream || function() {
     const fallback_player = document.getElementById("fallback-player")
-    const stream = player.mozCaptureStream.apply(arguments);
+	console.debug(this);
+	console.debug(player);
+    const stream = this.mozCaptureStream.apply(this, arguments);
     fallback_player.srcObject = stream;
     return stream;
 }.bind(player);
