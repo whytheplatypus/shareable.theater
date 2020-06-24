@@ -10,7 +10,7 @@ svg {
 }
 
 main {
-	height: 100%;
+	min-height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -47,6 +47,10 @@ main {
 }
 
 div.ffvideo {
+	flex: 0 1 auto;
+	video {
+		max-width: 100%;
+	}
 	video#fallback-player {
 		display: none;
 	}
@@ -66,6 +70,12 @@ main[data-state=ready] {
 
 main[data-state=playing] {
 	.stateful.playing {
+		display: initial;
+	}
+}
+
+main[data-state=sharing] {
+	.stateful.sharing {
 		display: initial;
 	}
 }

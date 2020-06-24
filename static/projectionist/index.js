@@ -42,10 +42,12 @@ share_screen.addEventListener("click", async function(ev) {
         });
     }
     remoteStream = new MediaStream();
-    player.srcObject = captureStream;
+    //player.srcObject = captureStream;
     controlStream = captureStream;
-    controlStream.onaddtrack = updateTracks;
-    player.load();
+    controlStream.onaddtrack = (e) => { updateTracks(e.track); };
+    captureStream.getTracks().forEach(track => { updateTracks(track); });
+    //player.load();
+    main_element.setAttribute("data-state", "sharing");
 });
 
 play_button.addEventListener("click", function(ev) {
@@ -54,7 +56,7 @@ play_button.addEventListener("click", function(ev) {
     player.src = video_source_url;
     remoteStream = new MediaStream();
     controlStream = player.captureStream()
-    controlStream.onaddtrack = updateTracks;
+    controlStream.onaddtrack = (e) => { updateTracks(e.track); };
     player.load();
 });
 
@@ -71,12 +73,12 @@ player.addEventListener("play", function() {
 
 const connections = {};
 
-function updateTracks(e) {
+function updateTracks(track) {
     for (let conn in connections) {
-        connections[conn].addTrack(e.track, remoteStream);
+		console.debug("updating tracks", conn)
+        connections[conn].addTrack(track, remoteStream);
     }
 }
-
 
 async function main() {
     console.debug("loading application");

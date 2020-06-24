@@ -37,6 +37,11 @@ a.button {
   color: white;
 }
 
+video {
+  max-height: 100%;
+  width: 100%;
+}
+
 main {
   height: 100%;
   display: flex;

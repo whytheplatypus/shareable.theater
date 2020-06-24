@@ -32,7 +32,7 @@ svg {
 }
 
 main {
-  height: 100%;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,6 +66,12 @@ main section#setup button svg {
   height: 2rem;
 }
 
+div.ffvideo {
+  flex: 0 1 auto;
+}
+div.ffvideo video {
+  max-width: 100%;
+}
 div.ffvideo video#fallback-player {
   display: none;
 }
@@ -79,5 +85,9 @@ main[data-state=ready] .stateful.ready {
 }
 
 main[data-state=playing] .stateful.playing {
+  display: initial;
+}
+
+main[data-state=sharing] .stateful.sharing {
   display: initial;
 }
