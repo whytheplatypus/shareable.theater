@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -12,12 +13,12 @@ import (
 var upgrader = websocket.Upgrader{}
 
 type Theater struct {
+	wg            sync.WaitGroup
 	Projectionist chan []byte
 	Audience      map[chan []byte]bool
 }
 
 func (c *Theater) audienceWebsocket(w http.ResponseWriter, r *http.Request) {
-
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -26,11 +27,12 @@ func (c *Theater) audienceWebsocket(w http.ResponseWriter, r *http.Request) {
 
 	client := make(chan []byte, 256)
 	c.Audience[client] = true
-	messages := make(chan []byte, 256)
 
 	// read
-	go read(messages, conn)
+	messages := read(conn)
+	c.wg.Add(1)
 	go func(messages <-chan []byte) {
+		defer c.wg.Done()
 		defer delete(c.Audience, client)
 		defer recoverln("Recovered from audience websocket read handler")
 		for {
@@ -48,18 +50,19 @@ func (c *Theater) audienceWebsocket(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Theater) projectionistWebsocket(w http.ResponseWriter, r *http.Request) {
-
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
 	// from https://github.com/gorilla/websocket/blob/master/examples/chat/client.go
-	messages := make(chan []byte, 256)
 	// read
-	go read(messages, conn)
+	messages := read(conn)
+	c.wg.Add(1)
 	go func(messages <-chan []byte) {
+		defer c.wg.Done()
 		defer recoverln("Recovered from audience websocket read handler")
+		defer close(c.Projectionist)
 		for {
 			message, ok := <-messages
 			if !ok {
@@ -72,10 +75,19 @@ func (c *Theater) projectionistWebsocket(w http.ResponseWriter, r *http.Request)
 					client <- message
 				}(client, message)
 			}
+
 		}
 	}(messages)
 	// write
-	go write(c.Projectionist, conn)
+	c.wg.Add(1)
+	go func() {
+		defer c.wg.Done()
+		defer func() {
+			c.Projectionist = nil
+		}()
+
+		write(c.Projectionist, conn)
+	}()
 }
 
 func recoverln(msg string) {
@@ -127,20 +139,28 @@ func write(messages <-chan []byte, conn *websocket.Conn) {
 	}
 }
 
-func read(messages chan<- []byte, conn *websocket.Conn) {
-	defer conn.Close()
-	defer close(messages)
-	conn.SetReadDeadline(time.Now().Add(pongWait))
-	conn.SetPongHandler(func(string) error { conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
-	for {
-		_, message, err := conn.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+func read(conn *websocket.Conn) <-chan []byte {
+	messages := make(chan []byte, 256)
+
+	go func(messages chan []byte, conn *websocket.Conn) {
+		defer conn.Close()
+		defer close(messages)
+
+		conn.SetReadDeadline(time.Now().Add(pongWait))
+		conn.SetPongHandler(func(string) error { conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+
+		for {
+			_, message, err := conn.ReadMessage()
+			if err != nil {
+				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+					log.Printf("error: %v", err)
+				}
+				log.Println("closing read")
+				break
 			}
-			break
+			message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+			messages <- message
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		messages <- message
-	}
+	}(messages, conn)
+	return messages
 }

@@ -1,3 +1,4 @@
+const signaler = new Signal("projectionist", "projectionist");
 const main_element = document.getElementsByTagName("main")[0];
 const video_source_input = document.getElementById("src");
 const play_button = document.getElementById("play");
@@ -84,7 +85,6 @@ function updateTracks(track) {
 
 async function main() {
     console.debug("loading application");
-    const signaler = new Signal("projectionist", "projectionist");
     await signaler.configure();
 
     signaler.onmessage = async (msg) => {

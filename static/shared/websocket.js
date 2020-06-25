@@ -9,18 +9,11 @@ const servers = {'iceServers': [
     },
 ]};
 
-function connectAs(path) {
+function connect() {
 	return new Promise((resolve, reject) => {
 		const conn = new WebSocket(`ws://${window.location.host}${window.location.pathname}/signal`);
 		conn.onopen = () => {
-			setInterval(function() {
-				console.debug("pinging ws");
-				conn.send("ping");
-			}, 30000);
 			resolve(conn);
-		};
-		conn.onclose = (e) => {
-			console.debug("socket closed", e);
 		};
 		conn.onerror = (e) => {
 			console.debug(e);

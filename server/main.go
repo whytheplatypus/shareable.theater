@@ -50,8 +50,7 @@ func main() {
 		vars := mux.Vars(r)
 		theater := vars["theater"]
 		_, ok := cinema[theater]
-		if ok {
-			log.Println("room is already taken")
+		if ok && cinema[theater].Projectionist != nil {
 			buf := &bytes.Buffer{}
 			tmpl.Execute(buf, "")
 			inUsePage.Execute(w, buf.String())
@@ -72,15 +71,29 @@ func main() {
 		vars := mux.Vars(r)
 		theater := vars["theater"]
 		_, ok := cinema[theater]
-		if ok {
+		if ok && cinema[theater].Projectionist != nil {
 			http.Error(w, "That theater is occupied", http.StatusConflict)
 			return
 		}
 
-		cinema[theater] = &Theater{
-			Projectionist: make(chan []byte, 256),
-			Audience:      map[chan []byte]bool{},
+		if cinema[theater] == nil {
+			// creation
+			// todo make this more prominant
+			cinema[theater] = &Theater{
+				Audience: map[chan []byte]bool{},
+			}
+			// starts the "setup" wait
+			cinema[theater].wg.Add(1)
+			// finishes the "setup" wait
+			defer cinema[theater].wg.Done()
+			go func(theater string) {
+				cinema[theater].wg.Wait()
+				delete(cinema, theater)
+				log.Println("Removing", theater)
+			}(theater)
 		}
+
+		cinema[theater].Projectionist = make(chan []byte, 256)
 		cinema[theater].projectionistWebsocket(w, r)
 	})
 
