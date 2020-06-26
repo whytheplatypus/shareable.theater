@@ -23,8 +23,8 @@ const (
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
 
-	THEATER_CAPACITY = 50
-	THEATER_LIMIT    = 1000
+	maxOccupancy    = 150
+	maxTheaterCount = 10000
 )
 
 var (
@@ -64,7 +64,7 @@ func main() {
 		http.ServeFile(w, r, "../static/projectionist/index.html")
 	})
 	r.HandleFunc("/projectionist/{theater}/signal", func(w http.ResponseWriter, r *http.Request) {
-		if len(cinema) > THEATER_LIMIT {
+		if len(cinema) > maxTheaterCount {
 			http.Error(w, "The whole building is full", http.StatusServiceUnavailable)
 			return
 		}
@@ -106,7 +106,7 @@ func main() {
 			http.ServeFile(w, r, "../static/empty.html")
 			return
 		}
-		if len(cinema[theater].Audience) > THEATER_CAPACITY {
+		if len(cinema[theater].Audience) > maxOccupancy {
 			http.ServeFile(w, r, "../static/full.html")
 			return
 		}
