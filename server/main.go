@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 
 	_ "net/http/pprof"
@@ -23,9 +25,24 @@ const (
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
 
-	maxOccupancy    = 150
-	maxTheaterCount = 10000
+	defaultMaxOccupancy    = "150"
+	defaultMaxTheaterCount = "10000"
 )
+
+func fromEnv(key string, or string) string {
+	val, ok := os.LookupEnv(key)
+	if !ok {
+		return or
+	}
+	return val
+}
+
+func must(val interface{}, err error) interface{} {
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
 
 var (
 	newline = []byte{'\n'}
@@ -35,6 +52,8 @@ var (
 var cinema = map[string]*Theater{}
 
 var addr = flag.String("addr", ":8080", "http service address")
+var maxOccupancy = flag.Int("occupancy", must(strconv.Atoi(fromEnv("MAX_OCCUPANCY", defaultMaxOccupancy))).(int), "http service address")
+var maxTheaterCount = flag.Int("theater-count", must(strconv.Atoi(fromEnv("MAX_THEATER_COUNT", defaultMaxTheaterCount))).(int), "http service address")
 
 func main() {
 	flag.Parse()
@@ -57,14 +76,14 @@ func main() {
 			w.WriteHeader(http.StatusConflict)
 			return
 		}
-		if len(cinema) > THEATER_LIMIT {
-			http.Error(w, "The whole building is full", http.StatusServiceUnavailable)
+		if len(cinema) > *maxTheaterCount {
+			http.ServeFile(w, r, "../static/full-building.html")
 			return
 		}
 		http.ServeFile(w, r, "../static/projectionist/index.html")
 	})
 	r.HandleFunc("/projectionist/{theater}/signal", func(w http.ResponseWriter, r *http.Request) {
-		if len(cinema) > maxTheaterCount {
+		if len(cinema) > *maxTheaterCount {
 			http.Error(w, "The whole building is full", http.StatusServiceUnavailable)
 			return
 		}
@@ -106,7 +125,7 @@ func main() {
 			http.ServeFile(w, r, "../static/empty.html")
 			return
 		}
-		if len(cinema[theater].Audience) > maxOccupancy {
+		if len(cinema[theater].Audience) > *maxOccupancy {
 			http.ServeFile(w, r, "../static/full.html")
 			return
 		}
