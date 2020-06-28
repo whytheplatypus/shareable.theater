@@ -11,9 +11,9 @@
    inkscape:version="1.0 (6e3e5246a0, 2020-05-07)"
    id="svg8"
    version="1.1"
-   viewBox="0 0 346.35957 241.69372"
-   height="913.48804"
-   width="1309.0756">
+   viewBox="0 0 158.75 109.71589"
+   height="414.67419"
+   width="600">
   <title
      id="title2308">shareable.theater description</title>
   <defs
@@ -48,10 +48,10 @@
     </marker>
     <inkscape:perspective
        id="perspective1888"
-       inkscape:persp3d-origin="116.59787 : 115.90535 : 1"
-       inkscape:vp_z="200.12927 : 130.58012 : 1"
-       inkscape:vp_y="0 : 606.05496 : 0"
-       inkscape:vp_x="199.77286 : 130.81424 : 1"
+       inkscape:persp3d-origin="53.609958 : 53.100899 : 1"
+       inkscape:vp_z="91.895624 : 59.826911 : 1"
+       inkscape:vp_y="0 : 277.77842 : 0"
+       inkscape:vp_x="91.732269 : 59.934222 : 1"
        sodipodi:type="inkscape:persp3d" />
     <filter
        height="1"
@@ -85,9 +85,9 @@
      inkscape:document-rotation="0"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
-     inkscape:cy="537.52935"
-     inkscape:cx="474.22629"
-     inkscape:zoom="0.49497475"
+     inkscape:cy="115.88393"
+     inkscape:cx="396.70606"
+     inkscape:zoom="1.979899"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1.0"
@@ -138,11 +138,12 @@
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(-2.9429274,-16.939611)"
+     transform="translate(-2.9429272,-147.34409)"
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1">
     <g
+       transform="matrix(0.45833872,0,0,0.45833872,1.5940696,138.51824)"
        inkscape:label="Viewer lines"
        style="stroke:#000000;stroke-width:1.32292;stroke-miterlimit:4;stroke-dasharray:31.75, 1.32292;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        id="g2218">
@@ -168,51 +169,51 @@
        id="g1890"
        sodipodi:type="inkscape:box3d">
       <path
-         points="149.85043,86.686773 149.85043,129.38201 196.95176,127.9895 196.95176,123.33433 "
-         d="M 196.95176,123.33433 149.85043,86.686773 v 42.695237 l 47.10133,-1.39251 z"
+         points="70.444961,178.27323 70.444961,197.8421 92.03332,197.20386 92.03332,195.07022 "
+         d="M 92.03332,195.07022 70.444961,178.27323 v 19.56887 l 21.588359,-0.63824 z"
          inkscape:box3dsidetype="3"
-         style="fill:#8686bf;fill-rule:evenodd;stroke:none;stroke-width:0.606055px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         style="fill:#8686bf;fill-rule:evenodd;stroke:none;stroke-width:0.277785px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
          id="path1896"
          sodipodi:type="inkscape:box3dside" />
       <path
-         points="149.85043,129.38201 158.38422,129.16894 197.07659,127.9908 196.95176,127.9895 "
-         d="m 196.95176,127.9895 -47.10133,1.39251 8.53379,-0.21307 38.69237,-1.17814 z"
+         points="70.444961,197.8421 74.356329,197.74445 92.090537,197.20446 92.03332,197.20386 "
+         d="m 92.03332,197.20386 -21.588359,0.63824 3.911368,-0.0976 17.734208,-0.53999 z"
          inkscape:box3dsidetype="13"
-         style="fill:#afafde;fill-rule:evenodd;stroke:none;stroke-width:0.606055px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         style="fill:#afafde;fill-rule:evenodd;stroke:none;stroke-width:0.277785px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
          id="path1900"
          sodipodi:type="inkscape:box3dside" />
       <path
-         points="196.95176,127.9895 197.07659,127.9908 197.07659,123.43058 196.95176,123.33433 "
-         d="m 196.95176,123.33433 v 4.65517 l 0.12483,0.001 v -4.56022 z"
+         points="92.03332,197.20386 92.090537,197.20446 92.090537,195.11433 92.03332,195.07022 "
+         d="m 92.03332,195.07022 v 2.13364 l 0.05722,6e-4 v -2.09013 z"
          inkscape:box3dsidetype="6"
-         style="fill:#353564;fill-rule:evenodd;stroke:none;stroke-width:0.606055px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         style="fill:#353564;fill-rule:evenodd;stroke:none;stroke-width:0.277785px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
          id="path1892"
          sodipodi:type="inkscape:box3dside" />
       <path
-         points="149.85043,86.686773 158.38422,93.319635 197.07659,123.43058 196.95176,123.33433 "
-         d="m 196.95176,123.33433 -47.10133,-36.647557 8.53379,6.632862 38.69237,30.110945 z"
+         points="70.444961,178.27323 74.356329,181.31332 92.090537,195.11433 92.03332,195.07022 "
+         d="m 92.03332,195.07022 -21.588359,-16.79699 3.911368,3.04009 17.734208,13.80101 z"
          inkscape:box3dsidetype="5"
-         style="fill:#4d4d9f;fill-rule:evenodd;stroke:none;stroke-width:0.606055px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         style="fill:#4d4d9f;fill-rule:evenodd;stroke:none;stroke-width:0.277785px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
          id="path1894"
          sodipodi:type="inkscape:box3dside" />
       <path
-         points="149.85043,129.38201 158.38422,129.16894 158.38422,93.319635 149.85043,86.686773 "
-         d="m 149.85043,86.686773 v 42.695237 l 8.53379,-0.21307 V 93.319635 Z"
+         points="70.444961,197.8421 74.356329,197.74445 74.356329,181.31332 70.444961,178.27323 "
+         d="m 70.444961,178.27323 v 19.56887 l 3.911368,-0.0976 v -16.43113 z"
          inkscape:box3dsidetype="14"
-         style="fill:#d7d7ff;fill-rule:evenodd;stroke:none;stroke-width:0.606055px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         style="fill:#d7d7ff;fill-rule:evenodd;stroke:none;stroke-width:0.277785px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
          id="path1898"
          sodipodi:type="inkscape:box3dside" />
       <path
-         points="158.38422,93.319635 158.38422,129.16894 197.07659,127.9908 197.07659,123.43058 "
-         d="M 197.07659,123.43058 158.38422,93.319635 v 35.849305 l 38.69237,-1.17814 z"
+         points="74.356329,181.31332 74.356329,197.74445 92.090537,197.20446 92.090537,195.11433 "
+         d="M 92.090537,195.11433 74.356329,181.31332 v 16.43113 l 17.734208,-0.53999 z"
          inkscape:box3dsidetype="11"
-         style="fill:#e9e9ff;fill-rule:evenodd;stroke:none;stroke-width:0.606055px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+         style="fill:#e9e9ff;fill-rule:evenodd;stroke:none;stroke-width:0.277785px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
          id="path1902"
          sodipodi:type="inkscape:box3dside" />
     </g>
     <g
        inkscape:label="Projectionist"
-       transform="matrix(1.7759358,0,0,1.7759358,167.453,88.41023)"
+       transform="matrix(0.81398005,0,0,0.81398005,78.344257,179.04014)"
        style="fill:#f4f6f8;stroke:#0f2d59;stroke-linecap:round;stroke-linejoin:round"
        id="g20">
       <path
@@ -246,7 +247,7 @@
     <g
        inkscape:label="Projector"
        style="filter:url(#filter1884)"
-       transform="matrix(-0.05567833,0,0,0.05567833,239.82307,87.17913)"
+       transform="matrix(-0.02551959,0,0,0.02551959,111.51421,178.4758)"
        id="g1211">
       <g
          id="_x23_ffffffff">
@@ -644,7 +645,7 @@
     </g>
     <g
        inkscape:label="WebRTC server"
-       transform="matrix(1.5688092,0,0,1.5688092,82.81533,184.89929)"
+       transform="matrix(0.71904593,0,0,0.71904593,39.551534,223.26482)"
        style="fill:#f4f6f8;stroke:#0f2d59;stroke-linecap:round;stroke-linejoin:round"
        id="g84">
       <path
@@ -671,7 +672,7 @@
     <g
        id="layer1-6"
        inkscape:label="Viewer 3"
-       transform="matrix(0.16247738,0,0,0.16247738,36.666698,27.454781)">
+       transform="matrix(0.07446971,0,0,0.07446971,18.39984,151.10177)">
       <circle
          r="18.940361"
          cy="50.038319"
@@ -795,7 +796,7 @@
          x="70.225998" />
     </g>
     <g
-       transform="matrix(0.16247738,0,0,0.16247738,36.36303,71.619194)"
+       transform="matrix(0.07446971,0,0,0.07446971,18.260653,171.3441)"
        inkscape:label="Viewer 2"
        id="g1722">
       <circle
@@ -923,7 +924,7 @@
     <g
        id="g1752"
        inkscape:label="Viewer 1"
-       transform="matrix(0.16247738,0,0,0.16247738,36.36303,113.59784)">
+       transform="matrix(0.07446971,0,0,0.07446971,18.260653,190.58448)">
       <circle
          r="18.940361"
          cy="50.038319"
@@ -1047,6 +1048,7 @@
          x="70.225998" />
     </g>
     <g
+       transform="matrix(0.45833872,0,0,0.45833872,1.5940696,138.51824)"
        style="stroke:#000000;stroke-width:1.32292;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4.1;stroke-dasharray:3.96875, 1.32292;stroke-dashoffset:0;stroke-opacity:1"
        inkscape:label="RTC connections"
        id="g1927">
@@ -1071,38 +1073,39 @@
     </g>
     <text
        id="text2226"
-       y="77.449699"
-       x="178.31616"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:125%;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       y="174.01654"
+       x="83.323265"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.85071px;line-height:125%;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.121273px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583px"
-         y="77.449699"
-         x="178.31616"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.85071px;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.121273px"
+         y="174.01654"
+         x="83.323265"
          id="tspan2224"
          sodipodi:role="line">Projectionist</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:125%;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="35.635265"
-       y="26.831907"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.85071px;line-height:125%;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.121273px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="17.927103"
+       y="150.81633"
        id="text2230"><tspan
          sodipodi:role="line"
          id="tspan2228"
-         x="35.635265"
-         y="26.831907"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583px">Viewers</tspan></text>
+         x="17.927103"
+         y="150.81633"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.85071px;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.121273px">Viewers</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;line-height:125%;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="98.839317"
-       y="184.22061"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.85071px;line-height:125%;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.121273px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="46.895981"
+       y="222.95366"
        id="text2234"><tspan
          sodipodi:role="line"
          id="tspan2232"
-         x="98.839317"
-         y="184.22061"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.5833px;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264583px">WebRTC</tspan></text>
+         x="46.895981"
+         y="222.95366"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.85071px;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.121273px">WebRTC</tspan></text>
     <g
+       transform="matrix(0.45833872,0,0,0.45833872,1.5940696,138.51824)"
        inkscape:label="Descriptions"
        id="g2288">
       <text
