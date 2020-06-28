@@ -21,6 +21,8 @@ sass index.scss > index.css
 
 ## How it works
 
+![Diagram](./drawing.svg)
+
 **Less technical**
 
 A projectionist creates a virtual screening room and makes a video file or part of their screen visible to those who join the room. The screening room's location is know by its URL which the projectionist has to share with viewers.
